@@ -30,6 +30,6 @@ public interface IndexedNavigableMap<K, V> extends NavigableMap<K, V> {
      *         from the
      * @throws ArrayIndexOutOfBoundsException if the specified index is less than 0 or greater than size-1
      */
-    Map.Entry<K, V> exactEntry(int index);
+    Entry<K, V> exactEntry(int index);
 
 }

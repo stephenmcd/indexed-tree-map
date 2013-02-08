@@ -797,24 +797,40 @@ public class IndexedTreeMap<K, V>
     }
 
     private K getExactKey(Entry<K, V> e, int index) {
-        if (e.left==null && index==0){
+        if (e.left == null && index == 0) {
             return e.key;
         }
-        if (e.left==null && e.right==null){
+        if (e.left == null && e.right == null) {
             return e.key;
         }
-        if (e.left != null && e.left.weight > index){
+        if (e.left != null && e.left.weight > index) {
             return getExactKey(e.left, index);
         }
-        if (e.left != null && e.left.weight == index){
+        if (e.left != null && e.left.weight == index) {
             return e.key;
         }
         return getExactKey(e.right, index - (e.left == null ? 0 : e.left.weight) - 1);
     }
 
 
-    public Map.Entry<K, V> exactEntry(int index) {
-        return null;
+    public Entry<K, V> exactEntry(int index) {
+        return getExactEntry(root, index);
+    }
+
+    private Entry<K, V> getExactEntry(Entry<K, V> e, int index) {
+        if (e.left == null && index == 0) {
+            return e;
+        }
+        if (e.left == null && e.right == null) {
+            return e;
+        }
+        if (e.left != null && e.left.weight > index) {
+            return getExactEntry(e.left, index);
+        }
+        if (e.left != null && e.left.weight == index) {
+            return e;
+        }
+        return getExactEntry(e.right, index - (e.left == null ? 0 : e.left.weight) - 1);
     }
 
 
