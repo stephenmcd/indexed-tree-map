@@ -82,7 +82,7 @@ import java.util.*;
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
- * @author Josh Bloch and Doug Lea
+ * @author Josh Bloch, Doug Lea, Vitaly Sazanovich
  * @version 1.73, 05/10/06
  * @see java.util.Map
  * @see java.util.HashMap
@@ -825,9 +825,7 @@ public class IndexedTreeMap<K, V>
         }
         int index = 0;
         int cmp;
-        if (e.left != null) {
-            index += getWeight(e.left);
-        }
+        index += getWeight(e.left);
         Entry<K, V> p = e.parent;
         // split comparator and comparable paths
         Comparator<? super K> cpr = comparator;
