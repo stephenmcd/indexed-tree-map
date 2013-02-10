@@ -26,7 +26,7 @@ public interface IndexedNavigableMap<K, V> extends NavigableMap<K, V> {
      *
      * @param index index of the key
      * @return the entry with the key {@code key} located at the index (@code index) offset
-     *         from the beginning of the
+     *         from the beginning of the sorted map
      * @throws ArrayIndexOutOfBoundsException if the specified index is less than 0 or greater than size-1
      */
     Entry<K, V> exactEntry(int index);

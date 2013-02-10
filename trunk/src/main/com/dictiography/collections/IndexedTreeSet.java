@@ -21,10 +21,10 @@ import java.util.*;
  * The elements are ordered using their {@linkplain Comparable natural
  * ordering}, or by a {@link java.util.Comparator} provided at set creation
  * time, depending on which constructor is used.
- *
+ * <p/>
  * <p>This implementation provides guaranteed log(n) time cost for the basic
  * operations ({@code add}, {@code remove} and {@code contains}).
- *
+ * <p/>
  * <p>Note that the ordering maintained by a set (whether or not an explicit
  * comparator is provided) must be <i>consistent with equals</i> if it is to
  * correctly implement the {@code Set} interface.  (See {@code Comparable}
@@ -36,7 +36,7 @@ import java.util.*;
  * are, from the standpoint of the set, equal.  The behavior of a set
  * <i>is</i> well-defined even if its ordering is inconsistent with equals; it
  * just fails to obey the general contract of the {@code Set} interface.
- *
+ * <p/>
  * <p><strong>Note that this implementation is not synchronized.</strong>
  * If multiple threads access a tree set concurrently, and at least one
  * of the threads modifies the set, it <i>must</i> be synchronized
@@ -47,7 +47,7 @@ import java.util.*;
  * method.  This is best done at creation time, to prevent accidental
  * unsynchronized access to the set: <pre>
  *   SortedSet s = Collections.synchronizedSortedSet(new IndexedTreeSet(...));</pre>
- *
+ * <p/>
  * <p>The iterators returned by this class's {@code iterator} method are
  * <i>fail-fast</i>: if the set is modified at any time after the iterator is
  * created, in any way except through the iterator's own {@code remove}
@@ -55,7 +55,7 @@ import java.util.*;
  * Thus, in the face of concurrent modification, the iterator fails quickly
  * and cleanly, rather than risking arbitrary, non-deterministic behavior at
  * an undetermined time in the future.
- *
+ * <p/>
  * <p>Note that the fail-fast behavior of an iterator cannot be guaranteed
  * as it is, generally speaking, impossible to make any hard guarantees in the
  * presence of unsynchronized concurrent modification.  Fail-fast iterators
@@ -63,31 +63,29 @@ import java.util.*;
  * Therefore, it would be wrong to write a program that depended on this
  * exception for its correctness:   <i>the fail-fast behavior of iterators
  * should be used only to detect bugs.</i>
- *
+ * <p/>
  * <p>This class is a member of the
  * <a href="{@docRoot}/../technotes/guides/collections/index.html">
  * Java Collections Framework</a>.
  *
  * @param <E> the type of elements maintained by this set
- *
- * @author  Josh Bloch
+ * @author Josh Bloch, Vitaly Sazanovich
  * @version %I%, %G%
- * @see        java.util.Collection
- * @see        java.util.Set
- * @see        java.util.HashSet
- * @see     Comparable
- * @see     java.util.Comparator
- * @see        IndexedTreeMap
- * @since   1.2
+ * @see java.util.Collection
+ * @see java.util.Set
+ * @see java.util.HashSet
+ * @see Comparable
+ * @see java.util.Comparator
+ * @see IndexedTreeMap
+ * @since 1.2
  */
 
 public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
-        implements IndexedNavigableSet<E>, Cloneable, java.io.Serializable
-{
+        implements IndexedNavigableSet<E>, Cloneable, java.io.Serializable {
     /**
      * The backing map.
      */
-    private transient NavigableMap<E,Object> m;
+    private transient NavigableMap<E, Object> m;
 
     // Dummy value to associate with an Object in the backing Map
     private static final Object PRESENT = new Object();
@@ -95,7 +93,10 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     /**
      * Constructs a set backed by the specified navigable map.
      */
-    IndexedTreeSet(NavigableMap<E,Object> m) {
+    IndexedTreeSet(NavigableMap<E, Object> m) {
+        if (!(m instanceof IndexedTreeMap)) {
+            throw new IllegalArgumentException("Map should implement IndexedTreeMap");
+        }
         this.m = m;
     }
 
@@ -113,24 +114,24 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
      * {@code ClassCastException}.
      */
     public IndexedTreeSet() {
-        this(new IndexedTreeMap<E,Object>());
+        this(new IndexedTreeMap<E, Object>());
     }
 
     /**
      * Constructs a new, empty tree set, sorted according to the specified
      * comparator.  All elements inserted into the set must be <i>mutually
      * comparable</i> by the specified comparator: {@code comparator.compare(e1,
-     * e2)} must not throw a {@code ClassCastException} for any elements
+     *e2)} must not throw a {@code ClassCastException} for any elements
      * {@code e1} and {@code e2} in the set.  If the user attempts to add
      * an element to the set that violates this constraint, the
      * {@code add} call will throw a {@code ClassCastException}.
      *
      * @param comparator the comparator that will be used to order this set.
-     *        If {@code null}, the {@linkplain Comparable natural
-     *        ordering} of the elements will be used.
+     *                   If {@code null}, the {@linkplain Comparable natural
+     *                   ordering} of the elements will be used.
      */
     public IndexedTreeSet(Comparator<? super E> comparator) {
-        this(new IndexedTreeMap<E,Object>(comparator));
+        this(new IndexedTreeMap<E, Object>(comparator));
     }
 
     /**
@@ -143,8 +144,8 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
      * {@code e2} in the set.
      *
      * @param c collection whose elements will comprise the new set
-     * @throws ClassCastException if the elements in {@code c} are
-     *         not {@link Comparable}, or are not mutually comparable
+     * @throws ClassCastException   if the elements in {@code c} are
+     *                              not {@link Comparable}, or are not mutually comparable
      * @throws NullPointerException if the specified collection is null
      */
     public IndexedTreeSet(Collection<? extends E> c) {
@@ -216,11 +217,11 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
      *
      * @param o object to be checked for containment in this set
      * @return {@code true} if this set contains the specified element
-     * @throws ClassCastException if the specified object cannot be compared
-     *         with the elements currently in the set
+     * @throws ClassCastException   if the specified object cannot be compared
+     *                              with the elements currently in the set
      * @throws NullPointerException if the specified element is null
-     *         and this set uses natural ordering, or its comparator
-     *         does not permit null elements
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
      */
     public boolean contains(Object o) {
         return m.containsKey(o);
@@ -237,14 +238,14 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
      * @param e element to be added to this set
      * @return {@code true} if this set did not already contain the specified
      *         element
-     * @throws ClassCastException if the specified object cannot be compared
-     *         with the elements currently in this set
+     * @throws ClassCastException   if the specified object cannot be compared
+     *                              with the elements currently in this set
      * @throws NullPointerException if the specified element is null
-     *         and this set uses natural ordering, or its comparator
-     *         does not permit null elements
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
      */
     public boolean add(E e) {
-        return m.put(e, PRESENT)==null;
+        return m.put(e, PRESENT) == null;
     }
 
     /**
@@ -257,15 +258,15 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
      * element once the call returns.)
      *
      * @param o object to be removed from this set, if present
-     * @return {@code true} if this set contained the specified element
-     * @throws ClassCastException if the specified object cannot be compared
-     *         with the elements currently in this set
+     * @return {@code true} if this set con tained the specified element
+     * @throws ClassCastException   if the specified object cannot be compared
+     *                              with the elements currently in this set
      * @throws NullPointerException if the specified element is null
-     *         and this set uses natural ordering, or its comparator
-     *         does not permit null elements
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
      */
     public boolean remove(Object o) {
-        return m.remove(o)==PRESENT;
+        return m.remove(o) == PRESENT;
     }
 
     /**
@@ -281,22 +282,22 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
      *
      * @param c collection containing elements to be added to this set
      * @return {@code true} if this set changed as a result of the call
-     * @throws ClassCastException if the elements provided cannot be compared
-     *         with the elements currently in the set
+     * @throws ClassCastException   if the elements provided cannot be compared
+     *                              with the elements currently in the set
      * @throws NullPointerException if the specified collection is null or
-     *         if any element is null and this set uses natural ordering, or
-     *         its comparator does not permit null elements
+     *                              if any element is null and this set uses natural ordering, or
+     *                              its comparator does not permit null elements
      */
-    public  boolean addAll(Collection<? extends E> c) {
+    public boolean addAll(Collection<? extends E> c) {
         // Use linear-time version if applicable
-        if (m.size()==0 && c.size() > 0 &&
+        if (m.size() == 0 && c.size() > 0 &&
                 c instanceof SortedSet &&
                 m instanceof IndexedTreeMap) {
             SortedSet<? extends E> set = (SortedSet<? extends E>) c;
-            IndexedTreeMap<E,Object> map = (IndexedTreeMap<E, Object>) m;
+            IndexedTreeMap<E, Object> map = (IndexedTreeMap<E, Object>) m;
             Comparator<? super E> cc = (Comparator<? super E>) set.comparator();
             Comparator<? super E> mc = map.comparator();
-            if (cc==mc || (cc != null && cc.equals(mc))) {
+            if (cc == mc || (cc != null && cc.equals(mc))) {
                 map.addAllForTreeSet(set, PRESENT);
                 return true;
             }
@@ -305,24 +306,24 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     }
 
     /**
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException if {@code fromElement} or {@code toElement}
-     *         is null and this set uses natural ordering, or its comparator
-     *         does not permit null elements
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code fromElement} or {@code toElement}
+     *                                  is null and this set uses natural ordering, or its comparator
+     *                                  does not permit null elements
      * @throws IllegalArgumentException {@inheritDoc}
      * @since 1.6
      */
     public NavigableSet<E> subSet(E fromElement, boolean fromInclusive,
-                                  E toElement,   boolean toInclusive) {
+                                  E toElement, boolean toInclusive) {
         return new IndexedTreeSet<E>(m.subMap(fromElement, fromInclusive,
-                toElement,   toInclusive));
+                toElement, toInclusive));
     }
 
     /**
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException if {@code toElement} is null and
-     *         this set uses natural ordering, or its comparator does
-     *         not permit null elements
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code toElement} is null and
+     *                                  this set uses natural ordering, or its comparator does
+     *                                  not permit null elements
      * @throws IllegalArgumentException {@inheritDoc}
      * @since 1.6
      */
@@ -331,10 +332,10 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     }
 
     /**
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException if {@code fromElement} is null and
-     *         this set uses natural ordering, or its comparator does
-     *         not permit null elements
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code fromElement} is null and
+     *                                  this set uses natural ordering, or its comparator does
+     *                                  not permit null elements
      * @throws IllegalArgumentException {@inheritDoc}
      * @since 1.6
      */
@@ -343,10 +344,10 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     }
 
     /**
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException if {@code fromElement} or
-     *         {@code toElement} is null and this set uses natural ordering,
-     *         or its comparator does not permit null elements
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code fromElement} or
+     *                                  {@code toElement} is null and this set uses natural ordering,
+     *                                  or its comparator does not permit null elements
      * @throws IllegalArgumentException {@inheritDoc}
      */
     public SortedSet<E> subSet(E fromElement, E toElement) {
@@ -354,10 +355,10 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     }
 
     /**
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException if {@code toElement} is null
-     *         and this set uses natural ordering, or its comparator does
-     *         not permit null elements
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code toElement} is null
+     *                                  and this set uses natural ordering, or its comparator does
+     *                                  not permit null elements
      * @throws IllegalArgumentException {@inheritDoc}
      */
     public SortedSet<E> headSet(E toElement) {
@@ -365,10 +366,10 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     }
 
     /**
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException if {@code fromElement} is null
-     *         and this set uses natural ordering, or its comparator does
-     *         not permit null elements
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code fromElement} is null
+     *                                  and this set uses natural ordering, or its comparator does
+     *                                  not permit null elements
      * @throws IllegalArgumentException {@inheritDoc}
      */
     public SortedSet<E> tailSet(E fromElement) {
@@ -396,10 +397,10 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     // NavigableSet API methods
 
     /**
-     * @throws ClassCastException {@inheritDoc}
+     * @throws ClassCastException   {@inheritDoc}
      * @throws NullPointerException if the specified element is null
-     *         and this set uses natural ordering, or its comparator
-     *         does not permit null elements
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
      * @since 1.6
      */
     public E lower(E e) {
@@ -407,10 +408,10 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     }
 
     /**
-     * @throws ClassCastException {@inheritDoc}
+     * @throws ClassCastException   {@inheritDoc}
      * @throws NullPointerException if the specified element is null
-     *         and this set uses natural ordering, or its comparator
-     *         does not permit null elements
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
      * @since 1.6
      */
     public E floor(E e) {
@@ -418,10 +419,10 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     }
 
     /**
-     * @throws ClassCastException {@inheritDoc}
+     * @throws ClassCastException   {@inheritDoc}
      * @throws NullPointerException if the specified element is null
-     *         and this set uses natural ordering, or its comparator
-     *         does not permit null elements
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
      * @since 1.6
      */
     public E ceiling(E e) {
@@ -429,10 +430,10 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     }
 
     /**
-     * @throws ClassCastException {@inheritDoc}
+     * @throws ClassCastException   {@inheritDoc}
      * @throws NullPointerException if the specified element is null
-     *         and this set uses natural ordering, or its comparator
-     *         does not permit null elements
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
      * @since 1.6
      */
     public E higher(E e) {
@@ -443,16 +444,16 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
      * @since 1.6
      */
     public E pollFirst() {
-        Map.Entry<E,?> e = m.pollFirstEntry();
-        return (e == null)? null : e.getKey();
+        Map.Entry<E, ?> e = m.pollFirstEntry();
+        return (e == null) ? null : e.getKey();
     }
 
     /**
      * @since 1.6
      */
     public E pollLast() {
-        Map.Entry<E,?> e = m.pollLastEntry();
-        return (e == null)? null : e.getKey();
+        Map.Entry<E, ?> e = m.pollLastEntry();
+        return (e == null) ? null : e.getKey();
     }
 
     /**
@@ -469,7 +470,7 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
             throw new InternalError();
         }
 
-        clone.m = new IndexedTreeMap<E,Object>(m);
+        clone.m = new IndexedTreeMap<E, Object>(m);
         return clone;
     }
 
@@ -478,12 +479,12 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
      * serialize it).
      *
      * @serialData Emits the comparator used to order this set, or
-     *             {@code null} if it obeys its elements' natural ordering
-     *             (Object), followed by the size of the set (the number of
-     *             elements it contains) (int), followed by all of its
-     *             elements (each an Object) in order (as determined by the
-     *             set's Comparator, or by the elements' natural ordering if
-     *             the set has no Comparator).
+     * {@code null} if it obeys its elements' natural ordering
+     * (Object), followed by the size of the set (the number of
+     * elements it contains) (int), followed by all of its
+     * elements (each an Object) in order (as determined by the
+     * set's Comparator, or by the elements' natural ordering if
+     * the set has no Comparator).
      */
     private void writeObject(java.io.ObjectOutputStream s)
             throws java.io.IOException {
@@ -497,7 +498,7 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
         s.writeInt(m.size());
 
         // Write out all elements in the proper order.
-        for (Iterator i=m.keySet().iterator(); i.hasNext(); )
+        for (Iterator i = m.keySet().iterator(); i.hasNext(); )
             s.writeObject(i.next());
     }
 
@@ -514,11 +515,11 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
         Comparator<? super E> c = (Comparator<? super E>) s.readObject();
 
         // Create backing IndexedTreeMap
-        IndexedTreeMap<E,Object> tm;
-        if (c==null)
-            tm = new IndexedTreeMap<E,Object>();
+        IndexedTreeMap<E, Object> tm;
+        if (c == null)
+            tm = new IndexedTreeMap<E, Object>();
         else
-            tm = new IndexedTreeMap<E,Object>(c);
+            tm = new IndexedTreeMap<E, Object>(c);
         m = tm;
 
         // Read in size
@@ -530,7 +531,25 @@ public class IndexedTreeSet<E> extends java.util.AbstractSet<E>
     private static final long serialVersionUID = -2479143000061671589L;
 
     public E exact(int index) {
-        return null;
+        Map.Entry<E, ?> e = ((IndexedNavigableMap) m).exactEntry(index);
+        return (e == null) ? null : e.getKey();
+    }
+
+    public int entryIndex(E e) {
+        return ((IndexedNavigableMap) m).keyIndex(e);
+    }
+
+    public void debug() throws Exception {
+        IndexedTreeMap.Entry e = ((IndexedTreeMap) m).getFirstEntry();
+        while (e != null) {
+//            String l = e.left == null ? "null" : "   " + e.left.key.toString();
+//            String r = e.right == null ? "null" : "   " + e.right.key.toString();
+//            System.out.println(e.key + ":" + l + ":" + r + ":" + e.weight);
+            if (e.weight != e.sumup()) {
+                throw new Exception("Weight is incorrect:" + e.weight + "!=" + e.sumup() + " for " + e.key);
+            }
+            e = ((IndexedTreeMap) m).successor(e);
+        }
     }
 }
 
