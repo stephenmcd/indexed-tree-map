@@ -10,7 +10,7 @@ import java.util.*;
  * Time: 15:01
  * Email: Vitaly.Sazanovich@gmail.com
  */
-public class PersistedIndexedTreeMapTest extends TestCase {
+public class IndexedTreeMapTest extends TestCase {
 
     public void testIndexedTreeMap() throws Exception {
         long t1 = System.currentTimeMillis();
@@ -18,31 +18,40 @@ public class PersistedIndexedTreeMapTest extends TestCase {
             Set<Integer> set = new HashSet<Integer>();
             Random random = new Random(System.currentTimeMillis());
             IndexedNavigableMap<Integer, Integer> m = new IndexedTreeMap<Integer, Integer>();
-
+//            int[] iis = {19,6,18,12,5,10,1,8,2,11};
+            int[] iis = {6,7,11,16,0,15,9,17,12,13};
+//            int[] iis = {6,5,1,0,2};
+//            int[] iis = {4,9,3,0,8};
+            int counter = 0;
             while (set.size() < 1000) {
+//                Integer next = iis[counter++];
                 Integer next = random.nextInt();
                 if (!set.contains(next)) {
                     set.add(next);
                     m.put(next, next);
+//                    System.out.print(next+",");
                     ((IndexedTreeMap) m).debug();
                 }
             }
-
+//            System.out.print("\n");
             Integer[] ints = set.toArray(new Integer[set.size()]);
             Arrays.sort(ints);
             for (int k = 0; k < ints.length; k++) {
                 int ek = m.exactKey(k).intValue();
                 int ev = m.exactEntry(k).getValue().intValue();
+//                System.out.println("Checking "+k);
+                int ind = m.keyIndex(ek);
+
                 assertEquals(ints[k].intValue(), ek);
                 assertEquals(ints[k].intValue(), ev);
+                assertEquals(k, ind);
 
             }
-
             Iterator<Integer> it = set.iterator();
             while (it.hasNext()) {
                 Integer next = it.next();
                 m.remove(next);
-                ((IndexedTreeMap) m).debug();
+//                ((IndexedTreeMap) m).debug();
             }
         }
         System.out.println("DONE IN:" + (System.currentTimeMillis() - t1));
