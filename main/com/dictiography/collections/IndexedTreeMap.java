@@ -2596,6 +2596,17 @@ public class IndexedTreeMap<K, V>
     void readTreeSet(int size, java.io.ObjectInputStream s, V defaultVal)
             throws java.io.IOException, ClassNotFoundException {
         buildFromSorted(size, null, s, defaultVal);
+        if (root!=null){
+            updateWeight(root);
+        }
+    }
+
+    private int updateWeight(Entry<K,V>e){
+        int weight = 1;
+        if (e.left!=null){weight += updateWeight(e.left);}
+        if (e.right!=null){weight += updateWeight(e.right);}
+        e.weight = weight;
+        return weight;
     }
 
     /**

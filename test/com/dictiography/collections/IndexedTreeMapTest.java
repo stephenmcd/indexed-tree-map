@@ -43,11 +43,16 @@ public class IndexedTreeMapTest extends TestCase {
             while (it.hasNext()) {
                 Integer next = it.next();
                 m.remove(next);
+                assertEquals(false, m.containsKey(next));
                 ((IndexedTreeMap) m).debug();
             }
+            assertEquals(0, m.size());
         }
+
         System.out.println("DONE IN:" + (System.currentTimeMillis() - t1));
     }
+
+
 
 
     public void testComparePutMap() throws Exception {
@@ -69,7 +74,7 @@ public class IndexedTreeMapTest extends TestCase {
         Iterator<Integer> it = set.iterator();
         while (it.hasNext()) {
             Integer next = it.next();
-            m1.put(next,next);
+            m1.put(next, next);
         }
         long t2 = System.currentTimeMillis();
 
@@ -77,11 +82,11 @@ public class IndexedTreeMapTest extends TestCase {
         it = set.iterator();
         while (it.hasNext()) {
             Integer next = it.next();
-            m2.put(next,next);
+            m2.put(next, next);
         }
         long t4 = System.currentTimeMillis();
 
-        System.out.println("For "+set.size()+" elements TreeMap wins IndexedTreeMap in put by:" +((t2-t1)-(t4-t3))+" milliseconds");
+        System.out.println("For " + set.size() + " elements TreeMap wins IndexedTreeMap in put by:" + ((t2 - t1) - (t4 - t3)) + " milliseconds");
     }
 
     public void testCompareDeleteMap() throws Exception {
@@ -96,8 +101,8 @@ public class IndexedTreeMapTest extends TestCase {
             Integer next = random.nextInt();
             if (!set.contains(next)) {
                 set.add(next);
-                m1.put(next,next);
-                m2.put(next,next);
+                m1.put(next, next);
+                m2.put(next, next);
             }
         }
 
@@ -117,8 +122,7 @@ public class IndexedTreeMapTest extends TestCase {
         }
         long t4 = System.currentTimeMillis();
 
-        System.out.println("For "+set.size()+" elements TreeMap wins IndexedTreeMap in remove by:" +((t2-t1)-(t4-t3))+" milliseconds");
+        System.out.println("For " + set.size() + " elements TreeMap wins IndexedTreeMap in remove by:" + ((t2 - t1) - (t4 - t3)) + " milliseconds");
     }
-
 
 }
